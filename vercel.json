@@ -1,10 +1,9 @@
 {
     "version": 2,
     "builds": [
-        { "src": "index.js", "use": "@vercel/node" }
+     { "src": "http://localhost:3700/api/projects", "use": "@vercel/node" }
     ],
     "routes": [
       { "src": "/(.*)", "dest": "/" }
     ]
   }
-  
