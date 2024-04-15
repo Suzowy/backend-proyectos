@@ -1,10 +1,11 @@
 'use strict';
 
 var mongoose = require('mongoose');
-require('dotenv').config();
+var dotenv = require("dotenv")
+dotenv.config();
 
 var app = require('./app');
-var PORT = process.env.PORT || 3700;
+var PORT = process.env.PORT || 5000;
 var mongoUri = 'mongodb+srv://admin:admin@proyecto.ii5axio.mongodb.net/';
 
 mongoose.Promise = global.Promise;
