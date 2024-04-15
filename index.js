@@ -4,8 +4,8 @@ var mongoose = require('mongoose');
 require('dotenv').config();
 
 var app = require('./app');
-var PORT = 3700;
-var mongoUri = 'mongodb+srv://admin:admin@proyecto.ii5axio.mongodb.net/'; 
+var PORT = process.env.PORT || 3700;
+var mongoUri = 'mongodb+srv://admin:admin@proyecto.ii5axio.mongodb.net/';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -14,7 +14,7 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 
     // Creación del servidor
     app.listen(PORT, () => {
-        console.log(`URL del servidor: http://localhost:${PORT}`);
+        console.log(`Servidor en ejecución en el puerto: ${PORT}`);
     });
 })
 .catch(err => console.log(err));
