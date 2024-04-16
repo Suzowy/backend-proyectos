@@ -3,11 +3,8 @@
 var express = require('express');
 var app = express();
 
-
-
 //archivos de rutas
 let project_routes = require("./routes/project");
-
 
 //middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -23,12 +20,8 @@ app.use((req, res, next) => {
     next();
 });
 
-
-
 //rutas
 app.use("/api", project_routes)
-
-
 
 //exportar
 module.exports = app;
