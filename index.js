@@ -16,12 +16,13 @@ mongoose.connect(mongoUri)
     });
   })
 
-.get('/', (req, res) => {
-  res.send(`${process.env.TITLE}`)
-})
-
 
   .catch(err => {
     console.error("Error al conectar a MongoDB:", err);
     process.exit(1); // Salir del proceso si hay un error crítico
   });
+
+
+  app.get('/', (req, res) => {
+    res.send(`${process.env.TITLE}`)
+  })
