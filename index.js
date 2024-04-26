@@ -4,13 +4,14 @@ var app = require('./app');
 var dotenv = require('dotenv');
 dotenv.config();
 
-// Conectar a MongoDB
-var mongoUri = process.env.MONGO_DB_URI;
+
 
 app.get('/', (req, res) => {
-  res.send(`${process.env.TITLE}`)
-})
+  res.send(`Bienvenido a ${process.env.TITLE}`);
+});
 
+// Conectar a MongoDB
+var mongoUri = process.env.MONGO_DB_URI;
 
 mongoose.connect(mongoUri)
   .then(() => {
@@ -29,4 +30,3 @@ mongoose.connect(mongoUri)
   });
 
 
- 
