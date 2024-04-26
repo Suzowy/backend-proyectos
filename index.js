@@ -16,7 +16,7 @@ mongoose.connect(mongoUri)
     });
   })
 
-app.get('/', (req, res) => {
+.get('/', (req, res) => {
   res.send(`${process.env.TITLE}`)
 })
 
