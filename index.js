@@ -15,6 +15,12 @@ mongoose.connect(mongoUri)
       console.log(`Servidor en ejecución en el puerto: ${process.env.PORT || 5000}`);
     });
   })
+
+app.get('/', (req, res) => {
+  res.send(`${process.env.TITLE}`)
+})
+
+
   .catch(err => {
     console.error("Error al conectar a MongoDB:", err);
     process.exit(1); // Salir del proceso si hay un error crítico
