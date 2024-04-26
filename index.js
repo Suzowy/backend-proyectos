@@ -6,6 +6,12 @@ dotenv.config();
 
 // Conectar a MongoDB
 var mongoUri = process.env.MONGO_DB_URI;
+
+app.get('/', (req, res) => {
+  res.send(`${process.env.TITLE}`)
+})
+
+
 mongoose.connect(mongoUri)
   .then(() => {
     console.log("Conexión establecida con éxito");
@@ -23,6 +29,4 @@ mongoose.connect(mongoUri)
   });
 
 
-  app.get('/', (req, res) => {
-    res.send(`${process.env.TITLE}`)
-  })
+ 
