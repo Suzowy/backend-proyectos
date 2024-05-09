@@ -26,7 +26,7 @@ let controller = {
         project.category = params.category;
         project.year = params.year;
         project.langs = params.langs;
-        project.image = null;
+        project.image = params.image;
         project.http = params.http;
 
         project.save().then((projectStored) => {
