@@ -45,7 +45,7 @@ let controller = {
 
     },
 
-    getProject: async function (req, res) {
+    getProject: async function(req, res) {
         try {
             var projectId = req.params.id;
 
@@ -156,7 +156,7 @@ let controller = {
 
     getImageFile: function (req, res) {
         let file = req.params.image;
-        let path_file = '../uploads' + file;
+        let path_file = './uploads/' +file;
 
         fs.exists(path_file, (exists) => {
             if (exists) {
