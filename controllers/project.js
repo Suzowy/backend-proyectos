@@ -26,149 +26,128 @@ let controller = {
         project.category = params.category;
         project.year = params.year;
         project.langs = params.langs;
-        project.image = params.image;
+        project.image = null;
         project.http = params.http;
 
-        project.save().then((projectStored) => {
-            return res.status(200).send({
-                message: "proyecto guardado",
-                project: projectStored,
+        project.save((err, projectStored) => {
+            if(err) return res.status(500).send({message: 'Error al guardar el proyecto'});
+        
+            if(!projectStored) return res.status(404).send({message: 'No se pudo guardar el proyecto'});
+
+            return res.status(200).send({project: projectStored});
+        });
+        
+    },
+    getProject: function(request,response){
+        let projectId = request.params.id;
+        
+        if(projectId == null) return response.status(404).send({message: 'El proyecto no existe'});
+
+        Project.findById(projectId, (err, project) => {
+            if(err) return response.status(500).send({message: 'Error al devolver los datos'});
+
+            if(!project) return response.status(404).send({message: 'El proyecto no existe'});
+
+            return response.status(200).send({
+                project
             });
-        })
-
-            .catch((error) => {
-                if (!projectStored) return res.status(404).send({ message: "no se ha podido guardar el proyecto" });
-
-                if (error) return res.status(500).send({ error: "Error al guardar el proyecto" });
-
-            });
-
+        });
     },
 
-    getProject: async function(req, res) {
-        try {
-            var projectId = req.params.id;
+    getProjects: function(req,res){
 
-            if (projectId == null) {
-                return res.status(404).send({
-                    message: "No se ha introducido ningún parámetro en la url."
-                });
-            }
+        Project.find({}).exec((err, projects) => {
+            if(err) return response.status(500).send({message: 'Error al devolver los datos'});
 
-            const projectFound = await Project.findById(projectId);
+            if(!projects) return res.status(404).send({message: 'No hay proyectos que mostrar'});
 
-            if (!projectFound) {
-                return res.status(404).send({
-                    message: "El proyecto no existe."
-                });
-            }
-
-            return res.status(200).send({
-                project: projectFound
-            });
-        } catch (error) {
-            console.log(error);
-            return res.status(500).send({
-                message: "Error al devolver los datos."
-            });
-        }
+            return res.status(200).send({projects});            
+        });
     },
 
-    getProjects: function (req, res) {
-        Project.find({}).sort('-year').then((projects) => {
-
-
-            if (!projects) return res.status(404).send({ message: "No hay projectos que mostrar..." });
-
-            return res.status(200).send({
-                message: "Proyectos ",
-                projects
-            });
-
-        }).catch((err) => {
-            if (err) return res.status(500).send({ message: "Error al devolver los datos" });
-        })
-    },
-
-    updateProject: function (req, res) {
+    updateProject: function(req,res){
         let projectId = req.params.id;
         let update = req.body;
 
-        Project.findByIdAndUpdate(projectId, update)
-            .then((projectUpdated) => {
-                return res.status(200).send({
-                    project: projectUpdated
-                })
+        Project.findByIdAndUpdate(projectId,update,{new:true},(err,projectUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar'});
+
+            if(!projectUpdated) return res.status(404).send({message: 'No existe el proyecto'});
+
+            return res.status(200).send({
+                project: projectUpdated
             })
-            .catch(() => {
-                return res.status(404).send({ message: "Proyecto no encontrado para actualizar." });
-            })
+        })
 
     },
 
-    deleteProject: function (req, res) {
+    removeProject: function(req,res){
         let projectId = req.params.id;
 
-        Project.findByIdAndDelete(projectId)
-            .then((projectRemoved) => {
-                return res.status(200).send({
-                    project: projectRemoved
-                })
-            })
-            .catch((err, projectRemoved) => {
-                if (err) return res.status(500).send({ message: 'No se pudo eliminar el proyecto.' });
+        Project.findByIdAndRemove(projectId,(err,projectRemoved) => {
+            if(err) return res.status(500).send({message: 'Error al borrar'});
 
-                if (!projectRemoved) return res.status(404).send({ message: 'No se pudo encontrar el proyecto para ser eliminado.' });
-            })
+            if(!projectRemoved) return res.status(404).send({message: 'No se pudo borrar el proyecto'});
+
+            return res.status(200).send({
+                project: projectRemoved
+            });
+        });
+
     },
 
-    uploadImage: async function (req, res) {
-        try {
-            const projectId = req.params.id;
-            const fileName = 'Imagen no subida';
+    uploadImage: function(req,res){
+        let projectId = req.params.id;
+        let fileName = 'Imagen no subida...';
 
-            if (req.files && req.files.image) {
-                const filePath = req.files.image.path;
-                const fileSplit = filePath.split('\\');
-                const fileNameNew = fileSplit[fileSplit.length - 1];
-                const updateImage = await Project.findByIdAndUpdate(projectId, { image: fileNameNew }, { new: true });
+        if(req.files){
+            let filePath = req.files.image.path;
+            let fileSplit = filePath.split('\\');
+            let fileName = fileSplit[1]; 
+            let extSplit = fileName.split('\.');
+            let fileExt = extSplit[1];
 
-                if (updateImage) {
+            if(fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == 'gif'){
+                Project.findByIdAndUpdate(projectId, {image: fileName},{new: true}, (err, projectUpdated) => {
+                    if(err) return res.status(500).send({message: 'Error al actualizar'});
+        
+                    if(!projectUpdated) return res.status(404).send({ message:'El proyecto no existe'});
+        
                     return res.status(200).send({
-                        files: fileNameNew, message: 'El archivo se ha subido con éxito'
-                    });
-                } else {
-                    return res.status(404).send({
-                        message: 'No se ha encontrado el proyecto'
-                    });
-                }
-            } else {
-                return res.status(200).send({
-                    message: fileName
+                        project: projectUpdated
+                    })
                 });
-            }
-        } catch (err) {
-            return res.status(500).send({ message: 'Error al llamar al método uploadImage' });
-        }
+            }else{
 
-        console.log(req.flies)
+                fs.unlink(filePath, (err) =>{
+                    return res.status(200).send({message: 'La extension no valida'});
+                });
+
+            }
+        }else {
+            return res.status(404).send({
+                message: fileName
+            });
+        }
     },
 
-    getImageFile: function (req, res) {
+    getImageFile: function(req,res){
         let file = req.params.image;
-        let path_file = './uploads/' +file;
+        let path_file = './uploads/'+file;
 
-        fs.exists(path_file, (exists) => {
-            if (exists) {
+        fs.access(path_file, fs.constants.F_OK, (err) => {
+            if(err){
+
+                return res.status(200).send({message: 'No existe la imagen'});
+                
+            }else{
                 return res.sendFile(path.resolve(path_file));
-            } else {
-                return res.status(200).send({
-                    message: "No existe la imagen..."
-                });
             }
-        })
+        });
     }
 
 };
+
+    
 
 module.exports = controller;
