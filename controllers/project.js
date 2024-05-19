@@ -45,24 +45,24 @@ let controller = {
 
     },
 
-    getProject: async function(req, res) {
+    getProject: async function (req, res) {
         try {
             var projectId = req.params.id;
-    
+
             if (projectId == null) {
                 return res.status(404).send({
                     message: "No se ha introducido ningún parámetro en la url."
                 });
             }
-    
+
             const projectFound = await Project.findById(projectId);
-    
+
             if (!projectFound) {
                 return res.status(404).send({
                     message: "El proyecto no existe."
                 });
             }
-    
+
             return res.status(200).send({
                 project: projectFound
             });
@@ -73,7 +73,7 @@ let controller = {
             });
         }
     },
-    
+
     getProjects: function (req, res) {
         Project.find({}).sort('-year').then((projects) => {
 
@@ -129,19 +129,13 @@ let controller = {
 
             if (req.files && req.files.image) {
                 const filePath = req.files.image.path;
-                const fileSplit = filePath.split('/');
+                const fileSplit = filePath.split('\\');
                 const fileNameNew = fileSplit[fileSplit.length - 1];
-
-                const updateImage = await Project.findByIdAndUpdate(
-                    projectId,
-                    { image: fileNameNew },
-                    { new: true }
-                );
+                const updateImage = await Project.findByIdAndUpdate(projectId, { image: fileNameNew }, { new: true });
 
                 if (updateImage) {
                     return res.status(200).send({
-                        files: fileNameNew,
-                        message: 'El archivo se ha subido con éxito'
+                        files: fileNameNew, message: 'El archivo se ha subido con éxito'
                     });
                 } else {
                     return res.status(404).send({
@@ -156,11 +150,13 @@ let controller = {
         } catch (err) {
             return res.status(500).send({ message: 'Error al llamar al método uploadImage' });
         }
+
+        console.log(req.flies)
     },
 
     getImageFile: function (req, res) {
         let file = req.params.image;
-        let path_file = './uploads/' +file;
+        let path_file = '../uploads' + file;
 
         fs.exists(path_file, (exists) => {
             if (exists) {
