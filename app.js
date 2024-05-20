@@ -1,7 +1,8 @@
 "use strict"
 
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+const path = require('path');
 
 //archivos de rutas
 let project_routes = require("./routes/project");
@@ -9,7 +10,7 @@ let project_routes = require("./routes/project");
 //middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
