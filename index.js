@@ -15,7 +15,7 @@ var mongoUri = process.env.MONGO_DB_URI;
 
 mongoose.connect(mongoUri)
   .then(() => {
-    console.log("Conexión a mongo establecida con éxito");
+    console.log("Conexión establecida con éxito");
 
     // Iniciar el servidor
     app.listen(process.env.PORT || 5000, () => {
@@ -28,5 +28,6 @@ mongoose.connect(mongoUri)
     console.error("Error al conectar a MongoDB:", err);
     process.exit(1); // Salir del proceso si hay un error crítico
   });
+
 
 
