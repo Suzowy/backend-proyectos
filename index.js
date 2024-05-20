@@ -15,7 +15,7 @@ var mongoUri = process.env.MONGO_DB_URI;
 
 mongoose.connect(mongoUri)
   .then(() => {
-    console.log("Conexión establecida con éxito");
+    console.log("Conexión a mongo establecida con éxito");
 
     // Iniciar el servidor
     app.listen(process.env.PORT || 5000, () => {
