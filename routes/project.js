@@ -7,7 +7,7 @@ let ProjectControler = require("../controllers/project");
 let router = express.Router();
 
 let multipart = require("connect-multiparty");
-let multipartMiddelware = multipart({uploadDir: "./uploads"});
+let multipartMiddelware = multipart({uploadDir: "../uploads/"});
 
 router.get("/home", ProjectControler.home);
 router.post("/test", ProjectControler.test);
