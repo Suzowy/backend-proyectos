@@ -23,7 +23,6 @@ mongoose.connect(mongoUri)
     });
   })
 
-
   .catch(err => {
     console.error("Error al conectar a MongoDB:", err);
     process.exit(1); // Salir del proceso si hay un error crítico

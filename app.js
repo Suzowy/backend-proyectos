@@ -1,8 +1,8 @@
 "use strict"
 
-const express = require('express');
-const app = express();
-const path = require('path');
+var express = require('express');
+const fileUpload = require('express-fileupload');
+var app = express();
 
 //archivos de rutas
 let project_routes = require("./routes/project");
@@ -10,7 +10,11 @@ let project_routes = require("./routes/project");
 //middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(fileUpload({
+    useTempFiles :true,
+    tempFileDir : './uploads'
+}));
+
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -26,4 +30,3 @@ app.use("/api", project_routes)
 
 //exportar
 module.exports = app;
-
