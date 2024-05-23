@@ -5,6 +5,7 @@ let ProjectController = require("../controllers/project");
 let router = express.Router();
 let multer = require("multer");
 
+
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -18,7 +19,7 @@ let storage = multer.diskStorage({
   }
 });
 
-let upload = multer({ storage: storage });
+const upload = multer({ dest: '../uploads/' });
 
 router.get("/home", ProjectController.home);
 router.post("/test", ProjectController.test);

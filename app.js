@@ -28,5 +28,15 @@ app.use((req, res, next) => {
 //rutas
 app.use("/api", project_routes)
 
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+      // Error de Multer
+      res.status(400).send({ error: 'Error de carga de archivo' });
+    } else {
+      // Otro tipo de error
+      res.status(500).send({ error: 'Error interno del servidor' });
+    }
+  });
+
 //exportar
 module.exports = app;
