@@ -169,7 +169,7 @@ let controller = {
 
     getImageFile: function (req, res) {
         let file = req.params.image;
-        let path_file = './uploads/' +file;
+        let path_file = '../uploads' +file;
 
         fs.exists(path_file, (exists) => {
             if (exists) {

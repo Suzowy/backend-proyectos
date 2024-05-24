@@ -6,7 +6,7 @@ let router = express.Router();
 
 // let multer = require("multer");
 let multipart = require("connect-multiparty");
-let multipartMiddelware = multipart({ uploadDir: "./uploads" });
+let multipartMiddelware = multipart({ uploadDir: "../uploads" });
 
 
 // let storage = multer.diskStorage({
