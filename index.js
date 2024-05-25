@@ -13,9 +13,6 @@ cloudinary.config({
 });
 
 
-
-
-
 app.get('/', (req, res) => {
   res.send(`Bienvenido a ${process.env.TITLE}`);
 });
@@ -38,5 +35,22 @@ mongoose.connect(mongoUri)
     process.exit(1); // Salir del proceso si hay un error crítico
   });
 
+
+//   var mongoose = require('mongoose');
+// var app = require('./app');
+// var port = 3700;
+
+// mongoose.Promise = global.Promise;
+// mongoose.connect('mongodb+srv://admin:admin@proyecto.ii5axio.mongodb.net/')
+// .then(()=>{
+//     console.log("conexion establecida con exito");
+
+//     //creaccion servidor
+
+//     app.listen(port, ()=> {
+//         console.log("servivor corriendo correctamente en la url:localhost:3700");
+//     })
+// })
+// .catch(err => console.log(err));
 
 

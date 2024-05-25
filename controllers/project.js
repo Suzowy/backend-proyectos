@@ -3,7 +3,7 @@
 let Project = require("../models/project");
 let fs = require('fs');
 let path = require('path');
-let cloudinary = require('cloudinary').v2;
+var cloudinary = require('cloudinary').v2;
 
 
 cloudinary.config({
@@ -11,6 +11,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
 
 
 let controller = {
@@ -169,7 +170,7 @@ let controller = {
 
     getImageFile: function (req, res) {
         let file = req.params.image;
-        let path_file = '../uploads' +file;
+        let path_file = './uploads/' +file;
 
         fs.exists(path_file, (exists) => {
             if (exists) {
@@ -185,49 +186,3 @@ let controller = {
 };
 
 module.exports = controller;
-
-
-    // uploadImage: async function (req, res) {
-    //     try {
-    //         const projectId = req.params.id;
-
-    //         if (req.file) {
-    //             const image = req.file.path;
-
-            
-    //             const result = await cloudinary.uploader.upload(image, {
-    //                 folder: 'proyectos'
-    //             });
-
-               
-    //             fs.unlinkSync(image);
-
-              
-    //             const updateImage = await Project.findByIdAndUpdate(
-    //                 projectId,
-    //                 { image: result.secure_url },
-    //                 { new: true }
-    //             );
-
-    //             if (updateImage) {
-    //                 return res.status(200).send({
-    //                     files: result.secure_url,
-    //                     message: 'La imagen se ha subido con éxito'
-    //                 });
-    //             } else {
-    //                 return res.status(404).send({
-    //                     message: 'No se ha encontrado el proyecto'
-    //                 });
-    //             }
-    //         } else {
-    //             return res.status(200).send({
-    //                 message: 'Imagen no subida'
-    //             });
-    //         }
-    //     } catch (err) {
-    //         console.error(err);
-    //         return res.status(500).send({ message: 'Error al subir la imagen' });
-    //     }
-    // },
-
-    
