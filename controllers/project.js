@@ -134,19 +134,19 @@ let controller = {
                         return res.status(500).send({ message: 'Error al subir la imagen a Cloudinary' });
                     }
 
-                    // Obtener la URL completa de la imagen de Cloudinary
-                    const imageUrl = result.secure_url;
+                    // Obtener el ID de la imagen de Cloudinary con la extensión
+                    const imageIdWithExtension = result.public_id + '.' + result.format;
 
-                    // Actualizar el proyecto en la base de datos con la URL de la imagen
+                    // Actualizar el proyecto en la base de datos con el ID de la imagen
                     const updateProject = await Project.findByIdAndUpdate(
                         projectId,
-                        { image: imageUrl },
+                        { image: imageIdWithExtension },
                         { new: true }
                     );
 
                     if (updateProject) {
                         return res.status(200).send({
-                            imageUrl: imageUrl,
+                            imageId: imageIdWithExtension,
                             message: 'El archivo se ha subido con éxito a Cloudinary'
                         });
                     } else {
@@ -167,7 +167,8 @@ let controller = {
 
     getImageFile: async function (req, res) {
         try {
-            const imageUrl = req.params.image;
+            const imageId = req.params.image;
+            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${imageId}`;
             return res.status(200).send({
                 imageUrl: imageUrl,
                 message: 'Imagen encontrada'
