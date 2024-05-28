@@ -134,19 +134,19 @@ let controller = {
                         return res.status(500).send({ message: 'Error al subir la imagen a Cloudinary' });
                     }
 
-                    // Obtener el ID de la imagen de Cloudinary con la extensión
-                    const imageIdWithExtension = result.public_id + '.' + result.format;
+                    // Obtener solo el nombre de la imagen con la extensión
+                    const imageNameWithExtension = path.basename(result.secure_url);
 
-                    // Actualizar el proyecto en la base de datos con el ID de la imagen
+                    // Actualizar el proyecto en la base de datos con el nombre de la imagen
                     const updateProject = await Project.findByIdAndUpdate(
                         projectId,
-                        { image: imageIdWithExtension },
+                        { image: imageNameWithExtension },
                         { new: true }
                     );
 
                     if (updateProject) {
                         return res.status(200).send({
-                            imageId: imageIdWithExtension,
+                            imageId: imageNameWithExtension,
                             message: 'El archivo se ha subido con éxito a Cloudinary'
                         });
                     } else {
