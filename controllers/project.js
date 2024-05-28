@@ -5,25 +5,22 @@ let fs = require('fs');
 let path = require('path');
 var cloudinary = require('cloudinary').v2;
 
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-
-
 let controller = {
     home: function (req, res) {
         return res.status(200).send({
-            menssaje: "soy la home"
+            mensaje: "soy la home"
         });
     },
 
     test: function (req, res) {
         return res.status(200).send({
-            messaje: "soy el metodo o accion test del controlador de project"
+            mensaje: "soy el metodo o accion test del controlador de project"
         });
     },
 
@@ -45,34 +42,29 @@ let controller = {
                 project: projectStored,
             });
         })
-
-            .catch((error) => {
-                if (!projectStored) return res.status(404).send({ message: "no se ha podido guardar el proyecto" });
-
-                if (error) return res.status(500).send({ error: "Error al guardar el proyecto" });
-
-            });
-
+        .catch((error) => {
+            return res.status(500).send({ error: "Error al guardar el proyecto" });
+        });
     },
 
     getProject: async function(req, res) {
         try {
             var projectId = req.params.id;
-    
+
             if (projectId == null) {
                 return res.status(404).send({
                     message: "No se ha introducido ningún parámetro en la url."
                 });
             }
-    
+
             const projectFound = await Project.findById(projectId);
-    
+
             if (!projectFound) {
                 return res.status(404).send({
                     message: "El proyecto no existe."
                 });
             }
-    
+
             return res.status(200).send({
                 project: projectFound
             });
@@ -83,20 +75,18 @@ let controller = {
             });
         }
     },
-    
+
     getProjects: function (req, res) {
         Project.find({}).sort('-year').then((projects) => {
-
-
             if (!projects) return res.status(404).send({ message: "No hay projectos que mostrar..." });
 
             return res.status(200).send({
-                message: "Proyectos ",
+                message: "Proyectos",
                 projects
             });
 
         }).catch((err) => {
-            if (err) return res.status(500).send({ message: "Error al devolver los datos" });
+            return res.status(500).send({ message: "Error al devolver los datos" });
         })
     },
 
@@ -113,7 +103,6 @@ let controller = {
             .catch(() => {
                 return res.status(404).send({ message: "Proyecto no encontrado para actualizar." });
             })
-
     },
 
     deleteProject: function (req, res) {
@@ -135,29 +124,29 @@ let controller = {
     uploadImage: async function (req, res) {
         try {
             const projectId = req.params.id;
-    
+
             if (req.files && req.files.image) {
                 const filePath = req.files.image.path;
-    
+
                 // Subir la imagen a Cloudinary en la carpeta "proyectos"
                 cloudinary.uploader.upload(filePath, { folder: 'proyectos' }, async function(error, result) {
                     if (error) {
                         return res.status(500).send({ message: 'Error al subir la imagen a Cloudinary' });
                     }
-    
-                    // Obtener el ID de la imagen de Cloudinary
-                    const imageId = result.public_id;
-    
-                    // Actualizar el proyecto en la base de datos con el ID de la imagen
+
+                    // Obtener la URL completa de la imagen de Cloudinary
+                    const imageUrl = result.secure_url;
+
+                    // Actualizar el proyecto en la base de datos con la URL de la imagen
                     const updateProject = await Project.findByIdAndUpdate(
                         projectId,
-                        { image: imageId },
+                        { image: imageUrl },
                         { new: true }
                     );
-    
+
                     if (updateProject) {
                         return res.status(200).send({
-                            imageId: imageId,
+                            imageUrl: imageUrl,
                             message: 'El archivo se ha subido con éxito a Cloudinary'
                         });
                     } else {
@@ -175,10 +164,10 @@ let controller = {
             return res.status(500).send({ message: 'Error al llamar al método uploadImage' });
         }
     },
+
     getImageFile: async function (req, res) {
         try {
-            const imageId = req.params.image;
-            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${imageId}`;
+            const imageUrl = req.params.image;
             return res.status(200).send({
                 imageUrl: imageUrl,
                 message: 'Imagen encontrada'
