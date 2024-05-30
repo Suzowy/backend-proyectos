@@ -3,11 +3,8 @@
 var express = require('express');
 var app = express();
 
-
-
 //archivos de rutas
 let project_routes = require("./routes/project");
-
 
 //middlewares
 app.use(express.urlencoded({ extended: true }));

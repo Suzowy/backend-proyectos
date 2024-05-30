@@ -58,21 +58,21 @@ let controller = {
     getProject: async function(req, res) {
         try {
             var projectId = req.params.id;
-    
+
             if (projectId == null) {
                 return res.status(404).send({
                     message: "No se ha introducido ningún parámetro en la url."
                 });
             }
-    
+
             const projectFound = await Project.findById(projectId);
-    
+
             if (!projectFound) {
                 return res.status(404).send({
                     message: "El proyecto no existe."
                 });
             }
-    
+
             return res.status(200).send({
                 project: projectFound
             });
@@ -83,7 +83,7 @@ let controller = {
             });
         }
     },
-    
+
     getProjects: function (req, res) {
         Project.find({}).sort('-year').then((projects) => {
 
@@ -135,10 +135,10 @@ let controller = {
     uploadImage: async function (req, res) {
         try {
             const projectId = req.params.id;
-    
+
             if (req.files && req.files.image) {
                 const filePath = req.files.image.path;
-    
+
                 // Subir la imagen a Cloudinary en la carpeta "proyectos"
                 cloudinary.uploader.upload(filePath, { folder: 'proyectos' }, async function(error, result) {
                     if (error) {
@@ -178,7 +178,7 @@ let controller = {
     getImageFile: async function (req, res) {
         try {
             const imageId = req.params.image;
-            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${imageId}`;
+            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/proyectos/${imageId}`;
             return res.status(200).send({
                 imageUrl: imageUrl,
                 message: 'Imagen encontrada'
