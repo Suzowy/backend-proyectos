@@ -77,9 +77,7 @@ let controller = {
             .then((projects) => {
                 if (!projects)
 
-                    return res
-                        .status(404)
-                        .send({ message: "No hay projectos que mostrar..." });
+                return res.status(404).send({ message: "No hay projectos que mostrar..." });
                 return res.status(200).send({
                     message: "Proyectos",
                     projects,
@@ -100,9 +98,7 @@ let controller = {
                 });
             })
             .catch(() => {
-                return res
-                    .status(404)
-                    .send({ message: "Proyecto no encontrado para actualizar." });
+                return res.status(404).send({ message: "Proyecto no encontrado para actualizar." });
             });
     },
 
@@ -180,7 +176,7 @@ let controller = {
     getImageFile: async function (req, res) {
         try {
             const imageId = req.params.image;
-            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${imageId}`;
+            const imageUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/proyectos/${imageId}`;
             return res.status(200).send({
                 imageUrl: imageUrl,
                 message: "Imagen encontrada",
