@@ -9,7 +9,7 @@
     "dev": "nodemon index.js"
   },
   "author": "Soraya Casanova",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "@cloudinary/angular": "^1.0.0-beta.14",
     "@cloudinary/ng": "^2.0.2",
